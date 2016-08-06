@@ -32,6 +32,12 @@
 	
 			var s = { x: 0,y: 0,z: 0 };
 			var v = { x: 0,y: 0,z: 0 };
+			
+			$scope.reset = () => {
+				s = { x: 0,y: 0,z: 0 };
+				v = { x: 0,y: 0,z: 0 };
+			};
+			
 			window.addEventListener("devicemotion",(eve) => {
 				var t = eve.interval / 1000;
 				var a = {
@@ -64,6 +70,7 @@
 
   <body ng-controller="TT">
     <table>
+      <button ng-click="reset()">reset</button>
       <tr>
         <td>{{FPS}}</td>
       </tr>
