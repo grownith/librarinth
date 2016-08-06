@@ -33,11 +33,13 @@
 			function GetPos(pos) {
 				navigator.geolocation.getCurrentPosition(GetPos,(err) => {
 					$scope.err = err;
+					$scope.$apply();
 					GetPos();
 				},{ enableHighAccuracy: true,maximumAge: 0.016 });
 				if(!pos)
 					return;
 				$scope.pos = pos;
+				$scope.$apply();
 			}
 			GetPos();
 
