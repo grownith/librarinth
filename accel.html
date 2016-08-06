@@ -44,8 +44,10 @@
 	
 				$scope.frame++;
 				$scope.values = [
-					["position",s.x,s.y,s.z],
-					["velocity",v.x,v.y,v.z],
+					["position","velocity"],
+					[s.x,v.x],
+					[s.y,v.y],
+					[s.z,v.z],
 				];
 	
 				$scope.$apply();
