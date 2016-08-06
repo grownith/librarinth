@@ -5,6 +5,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
     <script>
     		var Precision6 = (v) => Math.floor(v * 100000) / 100000;
+    		var Precision3 = (v) => Math.floor(v * 1000) / 1000;
+    		var Precision2 = (v) => Math.floor(v * 100) / 100;
 
     		function FPS($scope) {
 			$scope.FPS = $scope.frame * 10;
@@ -45,13 +47,6 @@
 					y: Precision6(eve.acceleration.y),
 					z: Precision6(eve.acceleration.z)
 				};
-				
-				if(Math.abs(a.x) < 0.25)
-					a.x = 0;
-				if(Math.abs(a.y) < 0.25)
-					a.y = 0;
-				if(Math.abs(a.z) < 0.25)
-					a.z = 0;
 
 				s.x += (v.x * t) + (0.5 * a.x * t * t);
 				s.y += (v.y * t) + (0.5 * a.y * t * t);
@@ -63,10 +58,10 @@
 	
 				$scope.frame++;
 				$scope.values = [
-					[t,"position","velocity","acceleration"],
-					["x",Precision6(s.x),Precision6(v.x),Precision6(a.x)],
-					["y",Precision6(s.y),Precision6(v.y),Precision6(a.y)],
-					["z",Precision6(s.z),Precision6(v.z),Precision6(a.z)],
+					[Precision3(t),"position","velocity","acceleration"],
+					["x",Precision2(s.x),Precision2(v.x),Precision2(a.x)],
+					["y",Precision2(s.y),Precision2(v.y),Precision2(a.y)],
+					["z",Precision2(s.z),Precision2(v.z),Precision2(a.z)],
 				];
 	
 				$scope.$apply();
