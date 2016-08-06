@@ -25,7 +25,7 @@
 				$scope.$apply();
 			},100);
 		}
-	
+
 		angular.module('TTTT',[]).controller('TT',($scope) => {
 			if(!window.DeviceMotionEvent)
 				return alert("Not Support DeviceMotionEvent");
@@ -40,8 +40,12 @@
 				v = { x: 0,y: 0,z: 0 };
 			};
 			
+			var last = performance.now();
 			window.addEventListener("devicemotion",(eve) => {
-				var t = eve.interval / 1000;
+				var now = performance.now();
+				var t = now - last;
+				last = now;
+
 				var a = {
 					x: Precision6(eve.acceleration.x),
 					y: Precision6(eve.acceleration.y),
@@ -70,7 +74,7 @@
     </script>
   </head>
 
-  <body ng-controller="TT">
+  <body ng-controller="TT" style="font-size: 400%">
     <table>
       <tr>
       	<td><button ng-click="reset()">reset</button></td>
