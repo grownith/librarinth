@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js">
+
+  	if(!window.DeviceMotionEvent)
+  		return alert("Not Support DeviceMotionEvent");
+    
+    function FPS($scope) {
+    	$scope.FPS = $scope.frame * 10;
+    	$scope.frame = 0;
+    
+    	if($scope && $scope.canvas && $scope.canvas.scene && $scope.canvas.objects)
+    	{
+    		$scope.canvas.scene.objects.forEach((obj) => {
+    			obj.pos = obj.next;
+    			obj.next = { x: -10 + (Math.random() * 20),z: -10 + (Math.random() * 20) };
+    		});
+    	}
+    
+    	setTimeout(() => {
+    		FPS($scope);
+    		$scope.$apply();
+    	},100);
+    }
+    
+		angular.module('TTTT').controller('TT',($scope) => {
+		  FPS($scope);
+    	
+    	var s = { x:0,y:0,z:0 };
+    	var v = { x:0,y:0,z:0 };
+    	window.addEventListener("devicemotion",(eve) => {
+    		var a = eve.acceleration;
+    		var t = eve.interval;
+    		
+    		s.x += (v.x * t) + (0.5 * a.x * t * t);
+    		s.y += (v.y * t) + (0.5 * a.y * t * t);
+    		s.z += (v.z * t) + (0.5 * a.z * t * t);
+    
+    		v.x += t * a.x;
+    		v.y += t * a.y;
+    		v.z += t * a.z;
+
+        $scope.frame++;
+    		$scope.values = [
+    		  ["position",s.x,s.y,s.z],
+    		  ["velocity",v.x,v.y,v.z],
+    		];
+
+    		$scope.$apply();
+    	},true);
+		}));
+    </script>
+  </head>
+
+  <body ng-app="TTTT" ng-controller="TT">
+    <table>
+      <tr>
+        <td>{{fps}}</td>
+      </tr>
+      <tr ng-repeat="p in values track by $index">
+        <td ng-repeat="v in value track by $index">{{v}}</td>
+      </tr>
+    </table>
+  </body>
+
+</html>
