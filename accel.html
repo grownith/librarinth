@@ -46,11 +46,11 @@
 					z: Precision6(eve.acceleration.z)
 				};
 				
-				if(Math.abs(a.x) < 0.1)
+				if(Math.abs(a.x) < 0.25)
 					a.x = 0;
-				if(Math.abs(a.y) < 0.1)
+				if(Math.abs(a.y) < 0.25)
 					a.y = 0;
-				if(Math.abs(a.z) < 0.1)
+				if(Math.abs(a.z) < 0.25)
 					a.z = 0;
 
 				s.x += (v.x * t) + (0.5 * a.x * t * t);
