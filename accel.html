@@ -4,6 +4,8 @@
   <head>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
     <script>
+    		var Precision6 = (v) => Math.floor(v * 100000) / 100000;
+
     		function FPS($scope) {
 			$scope.FPS = $scope.frame * 10;
 			$scope.frame = 0;
@@ -31,9 +33,13 @@
 			var s = { x: 0,y: 0,z: 0 };
 			var v = { x: 0,y: 0,z: 0 };
 			window.addEventListener("devicemotion",(eve) => {
-				var a = eve.acceleration;
 				var t = eve.interval / 1000;
-	
+				var a = {
+					x: Precision6(eve.acceleration.x),
+					y: Precision6(eve.acceleration.y),
+					z: Precision6(eve.acceleration.z)
+				};
+
 				s.x += (v.x * t) + (0.5 * a.x * t * t);
 				s.y += (v.y * t) + (0.5 * a.y * t * t);
 				s.z += (v.z * t) + (0.5 * a.z * t * t);
@@ -45,9 +51,9 @@
 				$scope.frame++;
 				$scope.values = [
 					["position","velocity"],
-					[s.x,v.x],
-					[s.y,v.y],
-					[s.z,v.z],
+					[Precision6(s.x),Precision6(v.x)],
+					[Precision6(s.y),Precision6(v.y)],
+					[Precision6(s.z),Precision6(v.z)],
 				];
 	
 				$scope.$apply();
