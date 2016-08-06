@@ -45,6 +45,13 @@
 					y: Precision6(eve.acceleration.y),
 					z: Precision6(eve.acceleration.z)
 				};
+				
+				if(Math.abs(a.x) < 0.1)
+					a.x = 0;
+				if(Math.abs(a.y) < 0.1)
+					a.y = 0;
+				if(Math.abs(a.z) < 0.1)
+					a.z = 0;
 
 				s.x += (v.x * t) + (0.5 * a.x * t * t);
 				s.y += (v.y * t) + (0.5 * a.y * t * t);
