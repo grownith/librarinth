@@ -56,10 +56,10 @@
 	
 				$scope.frame++;
 				$scope.values = [
-					["position","velocity"],
-					[Precision6(s.x),Precision6(v.x)],
-					[Precision6(s.y),Precision6(v.y)],
-					[Precision6(s.z),Precision6(v.z)],
+					[t,"position","velocity","acceleration"],
+					["x",Precision6(s.x),Precision6(v.x),Precision6(a.x)],
+					["y",Precision6(s.y),Precision6(v.y),Precision6(a.y)],
+					["z",Precision6(s.z),Precision6(v.z),Precision6(a.z)],
 				];
 	
 				$scope.$apply();
