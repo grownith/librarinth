@@ -43,7 +43,7 @@
 			var last = performance.now();
 			window.addEventListener("devicemotion",(eve) => {
 				var now = performance.now();
-				var t = now - last;
+				var t = (now - last) / 1000;
 				last = now;
 
 				var a = {
