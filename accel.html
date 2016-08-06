@@ -29,7 +29,18 @@
 		angular.module('TTTT',[]).controller('TT',($scope) => {
 			if(!window.DeviceMotionEvent)
 				return alert("Not Support DeviceMotionEvent");
-	
+
+			function GetPos(pos) {
+				navigator.geolocation.getCurrentPosition(GetPos,(err) => {
+					$scope.err = err;
+					GetPos();
+				},{ enableHighAccuracy: true,maximumAge: 0.016 });
+				if(!pos)
+					return;
+				$scope.pos = pos;
+			}
+			GetPos();
+
 			FPS($scope);
 	
 			var s = { x: 0,y: 0,z: 0 };
@@ -82,6 +93,16 @@
       </tr>
       <tr ng-repeat="value in values track by $index">
         <td ng-repeat="p in value track by $index">{{p}}</td>
+      </tr>
+    </table>
+    <table ng-if="pos">
+      <tr ng-repeat="(key,value) in pos">
+        <td>{{key}}</td><td>{{value}}</td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <td>Error</td><td>err</td>
       </tr>
     </table>
   </body>
