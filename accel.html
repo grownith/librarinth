@@ -70,8 +70,8 @@
 
   <body ng-controller="TT">
     <table>
-      <button ng-click="reset()">reset</button>
       <tr>
+      	<td><button ng-click="reset()">reset</button></td>
         <td>{{FPS}}</td>
       </tr>
       <tr ng-repeat="value in values track by $index">
