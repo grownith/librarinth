@@ -100,9 +100,9 @@
         <td>{{key}}</td><td>{{value}}</td>
       </tr>
     </table>
-    <table>
+    <table ng-if="err">
       <tr>
-        <td>Error</td><td>err</td>
+        <td>Error</td><td>{{err}}</td>
       </tr>
     </table>
   </body>
