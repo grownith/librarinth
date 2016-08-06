@@ -22,7 +22,7 @@
 			},100);
 		}
 	
-		angular.module('TTTT').controller('TT',($scope) => {
+		angular.module('TTTT',[]).controller('TT',($scope) => {
 			if(!window.DeviceMotionEvent)
 				return alert("Not Support DeviceMotionEvent");
 	
