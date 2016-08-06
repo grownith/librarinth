@@ -35,11 +35,13 @@
 					$scope.err = err;
 					$scope.$apply();
 					GetPos();
-				},{ enableHighAccuracy: true,maximumAge: 0.016 });
+				},{ enableHighAccuracy: true });
 				if(!pos)
 					return;
-				$scope.pos = JSON.stringify(pos);
-				$scope.coord = pos.coords;
+
+				$scope.coord = { TimeStamp : pos.TimeStamp };
+				for(var key in pos.coords)
+				  $scope.coord[key] = pos.coords[key];
 				$scope.$apply();
 			}
 			GetPos();
@@ -100,15 +102,13 @@
     </table>
     <table>
       <tr ng-repeat="(key,value) in coord">
-        <td>{{key}}</td><td>{{coord}}</td>
+        <td>{{key}}</td><td>{{value}}</td>
       </tr>
     </table>
     <table>
       <tr>
-        <td>Pos</td><td>{{pos}}</td>
         <td>Error</td><td>{{err}}</td>
       </tr>
     </table>
   </body>
-
 </html>
