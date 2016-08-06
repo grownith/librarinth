@@ -32,7 +32,7 @@
 			var v = { x: 0,y: 0,z: 0 };
 			window.addEventListener("devicemotion",(eve) => {
 				var a = eve.acceleration;
-				var t = eve.interval;
+				var t = eve.interval / 1000;
 	
 				s.x += (v.x * t) + (0.5 * a.x * t * t);
 				s.y += (v.y * t) + (0.5 * a.y * t * t);
@@ -57,7 +57,7 @@
   <body ng-controller="TT">
     <table>
       <tr>
-        <td>{{fps}}</td>
+        <td>{{FPS}}</td>
       </tr>
       <tr ng-repeat="value in values track by $index">
         <td ng-repeat="p in value track by $index">{{p}}</td>
