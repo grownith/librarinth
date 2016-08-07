@@ -30,6 +30,9 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 		$scope.switchCamera();
 	}).catch((err) => $scope.err = err);
 
+	if(!navigator.mediaDevices.getUserMedia)
+		navigator.mediaDevices.getUserMedia	= navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
 	$scope.switchCamera = () => {
 		navigator.mediaDevices.getUserMedia({
 			video: { deviceId: $scope.deviceId }
