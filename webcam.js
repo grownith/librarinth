@@ -29,23 +29,21 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 
 	navigator.mediaDevices.enumerateDevices().then((devices) => {
 		$scope.videoDevices = devices.map((device) => device.toJSON()).filter((device) => device.kind == "videoinput");
-		$scope.deviceId = $scope.videoDevices[0].deviceId;
+		$scope.deviceId = $scope.videoDevices[1].deviceId;
 		$scope.$apply();
 
-		$scope.videoDevices.forEach((device,i) => {
-			var video = document.getElementById("v" + i);
-			navigator.getUserMedia({
-				video: { deviceId: device.deviceId }
-			},(stream) => {
-				/** @type {HTMLVideoElement} */
-				video.src = URL.createObjectURL(stream);
-				video.onloadedmetadata = (eve) => {
-					video.play();
-				};
-			},(error) => {
-				$scope.err = error;
-				console.error(error);
-			});
+		var video = document.getElementById("v" + 1);
+		navigator.getUserMedia({
+			video: { deviceId: { exact: $scope.deviceId } }
+		},(stream) => {
+			/** @type {HTMLVideoElement} */
+			video.src = URL.createObjectURL(stream);
+			video.onloadedmetadata = (eve) => {
+				video.play();
+			};
+		},(error) => {
+			console.error(error);
+			$scope.err = error;
 		});
 
 	}).catch((err) => $scope.err = err);
