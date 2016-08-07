@@ -37,7 +37,10 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 			/** @type {HTMLVideoElement} */
 			var video = document.getElementById("v" + i);
 			navigator.getUserMedia({
-				video: { deviceId: { exact: device.deviceId } }
+				video: {
+					deviceId: { exact: device.deviceId },
+					optional: [{sourceId: device.deviceId}]
+				}
 			},(stream) => {
 				video.onclick = () => {
 					video.src = URL.createObjectURL(stream);
