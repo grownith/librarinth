@@ -31,7 +31,7 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 		var device = devices.filter((device) => device.kind == "videoinput").pop();
 
 		navigator.getUserMedia({
-			video: { deviceId: device.deviceId }
+			video: { deviceId: { exact: device.deviceId } }
 		},(stream) => {
 			/** @type {HTMLVideoElement} */
 			var video = document.getElementById("v");
