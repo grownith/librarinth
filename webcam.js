@@ -28,7 +28,7 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 		navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
 	navigator.mediaDevices.enumerateDevices().then((devices) => {
-		var device = devices.filter((device) => device.kind == "videoinput").shift();
+		var device = devices.filter((device) => device.kind == "videoinput").pop();
 
 		navigator.getUserMedia({
 			video: { deviceId: device.deviceId }
