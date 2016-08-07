@@ -29,7 +29,7 @@ angular.module("TTTT", []).controller("TT", ($scope) => {
 		$scope.mediaDevices = devices.reduce((obj, device) => {
 			var dev = {};
 			for (var key in device)
-				dev = device[key];
+				dev[key] = device[key];
 
 			if (!obj[device.kind])
 				obj[device.kind] = [];
