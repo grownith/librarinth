@@ -27,24 +27,23 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 	if(!navigator.getUserMedia)
 		navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
+	$scope.switchCamera = function() {
+		var video = document.getElementById("v");
+		navigator.getUserMedia({
+			video: {
+				deviceId: { exact: $scope.deviceId },
+				optional: [{ sourceId: $scope.deviceId }]
+			}
+		},(stream) => {
+			video.src = URL.createObjectURL(stream);
+			video.play();
+		},(error) => { throw error; });
+	};
+
 	navigator.mediaDevices.enumerateDevices().then((devices) => {
-		devices.filter((device) => {
+		$scope.devices = devices.filter((device) => {
 			return device.kind == "videoinput";
-		}).forEach((device,i) => {
-			/** @type {HTMLVideoElement} */
-			var video = document.getElementById("v" + i);
-			navigator.getUserMedia({
-				video: {
-					deviceId: { exact: device.deviceId },
-					optional: [{sourceId: device.deviceId}]
-				}
-			},(stream) => {
-				video.onclick = () => {
-					video.src = URL.createObjectURL(stream);
-					video.play();
-				};
-			},(error) => { throw error; });
-		});
+		}).map((device) => device.toJSON());
 	}).catch((err) => {
 		console.error(err);
 		$scope.err = err;
