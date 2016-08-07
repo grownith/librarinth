@@ -36,7 +36,6 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 			}
 		},(stream) => {
 			video.src = URL.createObjectURL(stream);
-			video.play();
 		},(error) => { throw error; });
 	};
 
