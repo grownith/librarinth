@@ -9,35 +9,44 @@
 <body ng-controller="TT">
 	<table>
 		<tr>
-			<td><button ng-click="reset()">reset</button></td>
-			<td>{{FPS}}</td>
-		</tr>
-		<tr ng-repeat="value in values track by $index">
-			<td ng-repeat="p in value track by $index">{{p}}</td>
+			<td>Error</td><td>{{err}}</td>
 		</tr>
 	</table>
 	<table>
-		<tr ng-repeat="(key,value) in coord">
-			<td>{{key}}</td><td>{{value}}</td>
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<td><button ng-click="reset()">reset</button></td>
+						<td>{{FPS}}</td>
+					</tr>
+					<tr ng-repeat="value in values track by $index">
+						<td ng-repeat="p in value track by $index">{{p}}</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					<tr ng-repeat="(key,value) in coord">
+						<td>{{key}}</td>
+						<td>{{value}}</td>
+					</tr>
+				</table>
+			</td>
 		</tr>
 	</table>
 	<table ng-repeat="(kind,devices) in mediaDevices">
 		<tr>
 			<td>{{kind}}</td>
 		</tr>
-		<tr ng-repeat="device in devices track by $index">
-			<td>
+		<tr>
+			<td ng-repeat="device in devices track by $index">
 				<table>
 					<tr ng-repeat="(key,value) in device">
 						<td>{{key}}</td><td>{{value}}</td>
 					</tr>
 				</table>
 			</td>
-		</tr>
-	</table>
-	<table>
-		<tr>
-			<td>Error</td><td>{{err}}</td>
 		</tr>
 	</table>
 </body>
