@@ -27,27 +27,26 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 	if(!navigator.getUserMedia)
 		navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
-	$scope.switchCamera = () => {
-		navigator.getUserMedia({
-			video: { deviceId: $scope.deviceId }
-		},(stream) => {
-			/** @type {HTMLVideoElement} */
-			var video = document.getElementById($scope.deviceId);
-			video.src = URL.createObjectURL(stream);
-			video.onloadedmetadata = (eve) => {
-				video.play();
-			};
-		},(error) => {
-			$scope.err = error;
-			console.error(error);
-		});
-	};
-
 	navigator.mediaDevices.enumerateDevices().then((devices) => {
 		$scope.videoDevices = devices.map((device) => device.toJSON()).filter((device) => device.kind == "videoinput");
 		$scope.deviceId = $scope.videoDevices[0].deviceId;
 		$scope.$apply();
 
-		setImmediate(() => $scope.switchCamera());
+		$scope.videoDevices.forEach((device,i) => {
+			var video = document.getElementById("v" + i);
+			navigator.getUserMedia({
+				video: { deviceId: device.deviceId }
+			},(stream) => {
+				/** @type {HTMLVideoElement} */
+				video.src = URL.createObjectURL(stream);
+				video.onloadedmetadata = (eve) => {
+					video.play();
+				};
+			},(error) => {
+				$scope.err = error;
+				console.error(error);
+			});
+		});
+
 	}).catch((err) => $scope.err = err);
 });

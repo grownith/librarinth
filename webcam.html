@@ -20,15 +20,14 @@
 <body ng-controller="TT">
 	<md-input-container style="margin-right: 10px;">
 		<label>device</label>
-		<md-select ng-model="deviceId" ng-change="switchCamera()">
+		<md-select ng-model="deviceId">
 			<md-option ng-repeat="device in videoDevices track by $index" value="{{device.deviceId}}">{{device.label}}</md-option>
 		</md-select>
 	</md-input-container>
 	{{err}}
 	<br>
-	<div ng-if="videoDevices" ng-repeat="device in videoDevices track by $index">
-		<video id="{{device.deviceId}}" width="400" height="300"></video>
-	</div>
+	<video id="v0" width="400" height="300"></video>
+	<video id="v1" width="400" height="300"></video>
 	<br>
 	<br>
 </body>
