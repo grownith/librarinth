@@ -19,8 +19,8 @@
 
 <body ng-controller="TT">
 	<md-input-container style="margin-right: 10px;">
-		<label>Size</label>
-		<md-select ng-model="deviceID" ng-change="switchCamera()">
+		<label>device</label>
+		<md-select ng-model="deviceId" ng-change="switchCamera()">
 			<md-option ng-repeat="device in videoDevices track by $index" value="{{device.deviceId}}">{{device.label}}</md-option>
 		</md-select>
 	</md-input-container>
