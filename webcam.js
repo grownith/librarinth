@@ -38,7 +38,7 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 			video: { deviceId: $scope.deviceId }
 		},(stream) => {
 			/** @type {HTMLVideoElement} */
-			var video = document.getElementById("video");
+			var video = document.getElementById($scope.deviceId);
 			video.src = URL.createObjectURL(stream);
 			video.onloadedmetadata = (eve) => {
 				video.play();

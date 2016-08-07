@@ -24,11 +24,13 @@
 			<md-option ng-repeat="device in videoDevices track by $index" value="{{device.deviceId}}">{{device.label}}</md-option>
 		</md-select>
 	</md-input-container>
-	<br>
-	<video id="video" width="800" height="500" />
-	<br>
-	<br>
 	{{err}}
+	<br>
+	<div ng-repeat="device in videoDevices track by $index">
+		<video ng-if="deviceId == device.deviceId" id="{{device.deviceId}}" width="800" height="400" />
+	</div>
+	<br>
+	<br>
 </body>
 
 </html>
