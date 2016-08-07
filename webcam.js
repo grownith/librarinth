@@ -33,14 +33,14 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 		}).forEach((device,i) => {
 			/** @type {HTMLVideoElement} */
 			var video = document.getElementById("v" + i);
-			video.onclick = () => {
-				navigator.getUserMedia({
-					video: { deviceId: { exact: device.deviceId } }
-				},(stream) => {
+			navigator.getUserMedia({
+				video: { deviceId: { exact: device.deviceId } }
+			},(stream) => {
+				video.onclick = () => {
 					video.src = URL.createObjectURL(stream);
 					video.play();
-				},(error) => { throw error; });
-			};
+				};
+			},(error) => { throw error; });
 		});
 	}).catch((err) => {
 		console.error(err);
