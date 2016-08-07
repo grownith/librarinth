@@ -35,11 +35,8 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 		},(stream) => {
 			/** @type {HTMLVideoElement} */
 			var video = document.getElementById("v");
-			video.onloadedmetadata = (eve) => {
-				video.play();
-			};
-
 			video.src = URL.createObjectURL(stream);
+			video.play();
 		},(error) => {
 			console.error(error);
 			$scope.err = error;
