@@ -31,14 +31,16 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 		devices.filter((device) => {
 			return device.kind == "videoinput";
 		}).forEach((device,i) => {
-			navigator.getUserMedia({
-				video: { deviceId: { exact: device.deviceId } }
-			},(stream) => {
-				/** @type {HTMLVideoElement} */
-				var video = document.getElementById("v" + i);
-				video.src = URL.createObjectURL(stream);
-				video.onclick = () => video.play();
-			},(error) => { throw error; });
+			/** @type {HTMLVideoElement} */
+			var video = document.getElementById("v" + i);
+			video.onclick = () => {
+				navigator.getUserMedia({
+					video: { deviceId: { exact: device.deviceId } }
+				},(stream) => {
+					video.src = URL.createObjectURL(stream);
+					video.play();
+				},(error) => { throw error; });
+			};
 		});
 	}).catch((err) => {
 		console.error(err);
