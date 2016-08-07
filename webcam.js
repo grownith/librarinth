@@ -29,10 +29,10 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 
 	navigator.mediaDevices.enumerateDevices().then((devices) => {
 		$scope.videoDevices = devices.map((device) => device.toJSON()).filter((device) => device.kind == "videoinput");
-		$scope.deviceId = $scope.videoDevices[1].deviceId;
+		$scope.deviceId = $scope.videoDevices[0].deviceId;
 		$scope.$apply();
 
-		var video = document.getElementById("v" + 1);
+		var video = document.getElementById("v");
 		navigator.getUserMedia({
 			video: { deviceId: { exact: $scope.deviceId } }
 		},(stream) => {
