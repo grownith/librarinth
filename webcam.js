@@ -26,7 +26,7 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 
 	navigator.mediaDevices.enumerateDevices().then((devices) => {
 		$scope.videoDevices = devices.map((device) => device.toJSON()).filter((device) => device.kind == "videoinput");
-		$scope.deviceId = $scope.videoDevices[$scope.videoDevices.length - 1].deviceId;
+		$scope.deviceId = $scope.videoDevices[0].deviceId;
 		$scope.switchCamera();
 	}).catch((err) => $scope.err = err);
 
@@ -39,8 +39,10 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 		},(stream) => {
 			/** @type {HTMLVideoElement} */
 			var video = document.getElementById("video");
-			video.onloadedmetadata = (eve) => video.play();
 			video.src = URL.createObjectURL(stream);
+			video.onloadedmetadata = (eve) => {
+				video.play();
+			};
 		},(error) => {
 			$scope.err = error;
 			console.error(error);
