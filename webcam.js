@@ -32,15 +32,16 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 		$scope.deviceId = $scope.videoDevices[0].deviceId;
 		$scope.$apply();
 
+		/** @type {HTMLVideoElement} */
 		var video = document.getElementById("v");
+		video.onloadedmetadata = (eve) => {
+			video.play();
+		};
+
 		navigator.getUserMedia({
 			video: { deviceId: { exact: $scope.deviceId } }
 		},(stream) => {
-			/** @type {HTMLVideoElement} */
 			video.src = URL.createObjectURL(stream);
-			video.onloadedmetadata = (eve) => {
-				video.play();
-			};
 		},(error) => {
 			console.error(error);
 			$scope.err = error;
