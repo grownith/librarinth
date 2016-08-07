@@ -31,9 +31,6 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 		devices.filter((device) => {
 			return device.kind == "videoinput";
 		}).forEach((device,i) => {
-			if(i < 1)
-				return;
-
 			/** @type {HTMLVideoElement} */
 			var video = document.getElementById("v" + i);
 			navigator.getUserMedia({
