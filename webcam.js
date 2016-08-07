@@ -36,12 +36,12 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 	$scope.switchCamera = () => {
 		navigator.getUserMedia({
 			video: { deviceId: $scope.deviceId }
-		}).then((stream) => {
+		},(stream) => {
 			/** @type {HTMLVideoElement} */
 			var video = document.getElementById("video");
 			video.onloadedmetadata = (eve) => video.play();
 			video.src = URL.createObjectURL(stream);
-		}).catch((error) => {
+		},(error) => {
 			$scope.err = error;
 			console.error(error);
 		});
