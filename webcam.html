@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html ng-app="TTTT">
+
+<head>
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-aria.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-messages.min.js"></script>
+
+	<!-- Angular Material Library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js">
+
+	<script src="webcam.js"></script>
+</head>
+
+<body ng-controller="TT">
+	<md-input-container style="margin-right: 10px;">
+		<label>Size</label>
+		<md-select ng-model="deviceID" ng-change="switchCamera()">
+			<md-option ng-repeat="device in videoDevices track by $index" value="{{device.deviceId}}">{{device.label}}</md-option>
+		</md-select>
+	</md-input-container>
+	<video id="video" width="800" height="500" />
+	<br>
+	<br>
+	{{err}}
+</body>
+
+</html>

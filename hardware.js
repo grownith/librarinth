@@ -4,16 +4,21 @@ var Precision6 = (v) => Math.floor(v * 100000) / 100000;
 var Precision3 = (v) => Math.floor(v * 1000) / 1000;
 var Precision2 = (v) => Math.floor(v * 100) / 100;
 
+var FPSs = [];
 function FPS($scope) {
-	$scope.FPS = $scope.frame * 10;
+	FPSs.push($scope.frame);
+	if (FPSs.length > 10)
+		FPSs.shift();
+
 	$scope.frame = 0;
+	$scope.FPS = FPSs.reduce((sum, fps) => sum + fps, 0);
 
 	if ($scope && $scope.canvas && $scope.canvas.scene && $scope.canvas.objects) {
 		$scope.canvas.scene.objects.forEach((obj) => {
 			obj.pos = obj.next;
 			obj.next = { x: -10 + (Math.random() * 20), z: -10 + (Math.random() * 20) };
 		});
-				}
+	}
 
 	setTimeout(() => {
 		FPS($scope);
