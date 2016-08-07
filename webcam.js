@@ -37,7 +37,7 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 				/** @type {HTMLVideoElement} */
 				var video = document.getElementById("v" + i);
 				video.src = URL.createObjectURL(stream);
-				video.play();
+				video.onclick(() => video.play());
 			},(error) => { throw error; });
 		});
 	}).catch((err) => {
