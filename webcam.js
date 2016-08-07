@@ -1,9 +1,5 @@
 /* global angular */
 
-var Precision6 = (v) => Math.floor(v * 100000) / 100000;
-var Precision3 = (v) => Math.floor(v * 1000) / 1000;
-var Precision2 = (v) => Math.floor(v * 100) / 100;
-
 var FPSs = [];
 function FPS($scope) {
 	FPSs.push($scope.frame);
@@ -26,7 +22,7 @@ function FPS($scope) {
 	}, 100);
 }
 
-angular.module("TTTT",[]).controller("TT",($scope) => {
+angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 
 	navigator.mediaDevices.enumerateDevices().then((devices) => {
 		$scope.videoDevices = devices.map((device) => device.toJSON()).filter((device) => device.kind == "videoinput");
