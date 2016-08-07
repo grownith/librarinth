@@ -30,21 +30,19 @@
 			if(!window.DeviceMotionEvent)
 				return alert("Not Support DeviceMotionEvent");
 
-			function GetPos(pos) {
-				navigator.geolocation.getCurrentPosition(GetPos,(err) => {
-					$scope.err = err;
-					$scope.$apply();
-					GetPos();
-				});
-				if(!pos)
+				navigator.geolocation.watchPosition((pos) => {
+if(!pos)
 					return;
 
 				$scope.coord = { TimeStamp : pos.TimeStamp };
 				for(var key in pos.coords)
 				  $scope.coord[key] = pos.coords[key];
 				$scope.$apply();
-			}
-			GetPos();
+},(err) => {
+					$scope.err = err;
+					$scope.$apply();
+				});
+				
 
 			FPS($scope);
 	
