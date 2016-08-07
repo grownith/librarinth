@@ -27,14 +27,10 @@ angular.module("TTTT", []).controller("TT", ($scope) => {
 
 	navigator.mediaDevices.enumerateDevices().then((devices) => {
 		$scope.mediaDevices = devices.reduce((obj, device) => {
-			var dev = {};
-			for (var key in device)
-				dev[key] = device[key];
-
 			if (!obj[device.kind])
 				obj[device.kind] = [];
 
-			obj[device.kind].push(dev);
+			obj[device.kind].push(device.toJSON());
 			return obj;
 		}, {});
 	}).catch((err) => $scope.err = err);
