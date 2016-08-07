@@ -31,6 +31,8 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 		var video = document.getElementById("v");
 		navigator.getUserMedia({
 			video: {
+				width: 800,
+				height: 400,
 				deviceId: { exact: $scope.deviceId },
 				optional: [{ sourceId: $scope.deviceId }]
 			}
