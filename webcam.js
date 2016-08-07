@@ -24,14 +24,6 @@ function FPS($scope) {
 
 angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 
-	navigator.mediaDevices.enumerateDevices().then((devices) => {
-		$scope.videoDevices = devices.map((device) => device.toJSON()).filter((device) => device.kind == "videoinput");
-		$scope.deviceId = $scope.videoDevices[0].deviceId;
-		$scope.$apply();
-
-		setImmediate(() => $scope.switchCamera());
-	}).catch((err) => $scope.err = err);
-
 	if(!navigator.getUserMedia)
 		navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
@@ -50,4 +42,12 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 			console.error(error);
 		});
 	};
+
+	navigator.mediaDevices.enumerateDevices().then((devices) => {
+		$scope.videoDevices = devices.map((device) => device.toJSON()).filter((device) => device.kind == "videoinput");
+		$scope.deviceId = $scope.videoDevices[0].deviceId;
+		$scope.$apply();
+
+		setImmediate(() => $scope.switchCamera());
+	}).catch((err) => $scope.err = err);
 });
