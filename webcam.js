@@ -39,7 +39,7 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 		};
 
 		navigator.getUserMedia({
-			video: { deviceId: { exact: $scope.deviceId } }
+			video: { deviceId: $scope.deviceId }
 		},(stream) => {
 			video.src = URL.createObjectURL(stream);
 		},(error) => {
