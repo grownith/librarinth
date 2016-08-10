@@ -45,9 +45,6 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 		$scope.devices = devices.filter((device) => {
 			return device.kind == "videoinput";
 		}).map((device) => device.toJSON());
-		
-		$scope.deviceId	= $scope.devices[$scope.devices.length - 1].deviceId;
-		$scope.switchCamera();
 	}).catch((err) => {
 		console.error(err);
 		$scope.err = err;
