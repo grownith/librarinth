@@ -23,24 +23,13 @@ function FPS($scope) {
 }
 
 angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
-	if(!navigator.mediaDevices)
-	  navigator.mediaDevices = {};
-	
-	if(!navigator.mediaDevices.getUserMedia) {
-		navigator.mediaDevices.getUserMedia = function(constraints) {
-			var getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia);
-			return new Promise(function(resolve,reject) {
-				if(!getUserMedia)
-					return reject(new Error('getUserMedia is not implemented in this browser'));
-		
-				getUserMedia.call(navigator, constraints, resolve, reject);
-			});
-		}
-	}
+
+	if(!navigator.getUserMedia)
+		navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
 	$scope.switchCamera = function() {
 		var video = document.getElementById("v");
-		navigator.mediaDevices.getUserMedia({
+		navigator.getUserMedia({
 			video: {
 				width: 800,
 				height: 400,
@@ -53,7 +42,12 @@ angular.module("TTTT",["ngMaterial"]).controller("TT",($scope) => {
 	};
 
 	navigator.mediaDevices.enumerateDevices().then((devices) => {
-		$scope.devices = devices.filter((device) => device.kind == "videoinput").map((device) => device.toJSON());
+		$scope.devices = devices.filter((device) => {
+			return device.kind == "videoinput";
+		}).map((device) => device.toJSON());
+		
+		$scope.deviceId	= $scope.devices[$scope.devices.length - 1].deviceId;
+		$scope.switchCamera();
 	}).catch((err) => {
 		console.error(err);
 		$scope.err = err;
