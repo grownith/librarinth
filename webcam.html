@@ -18,17 +18,19 @@
 </head>
 
 <body ng-controller="TT">
-	<md-input-container style="margin-right: 10px;">
-		<label>device</label>
-		<md-select ng-model="deviceId" ng-change="switchCamera()">
-			<md-option ng-repeat="device in devices track by $index" value="{{device.deviceId}}">{{device.label}}</md-option>
-		</md-select>
-	</md-input-container>
+	<div style="float:left;z-index:-1;position:absolute;height:100%;width:100%;overflow: hidden;">
+		<video id="v" autoplay="autoplay" style="width: auto;height: 100%"></video>
+	</div>
+	<div style="position:absolute;float:left;background-color:#000;">
+		<md-input-container style="margin-right: 10px;">
+			<label>device</label>
+			<md-select ng-model="deviceId" ng-change="switchCamera()">
+				<md-option ng-repeat="device in devices track by $index" value="{{device.deviceId}}">{{device.label}}</md-option>
+			</md-select>
+		</md-input-container>
+	<br>
 	{{err}}
-	<br>
-	<video id="v" width="800" height="400" autoplay="autoplay"></video>
-	<br>
-	<br>
+	</div>
 </body>
 
 </html>
