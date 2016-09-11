@@ -21,11 +21,6 @@
       	}
       }
       
-      var elements = [
-      	"Fire","Earth","Ice","Life","Water"
-      	,"Lightning","Metal","Poison","Wind","???"
-      ];
-      
       var constraints = {
       	Fire: { NoWin: ["Earth","Water","Wind","Metal"] },
       	Earth: { NoWin: ["Life","Metal"] },
@@ -77,15 +72,17 @@
       	}
       }
 
+
+      var elements = Object.keys(constraints);
       angular.module('html',[]).controller('body',function($scope) {
         $scope.net = [];
         $scope.constraints = constraints;
         
         $scope.reConstraint = () => {
           $scope.possible = 0;
-          for(var key in $scope.constraints)
+          for(var key in constraints)
           {
-            var con = $scope.constraints[key];
+            var con = constraints[key];
             con.Avail = elements.filter((ele) => {
               return ele != key && !(con.NoWin.indexOf(ele) >= 0);
             });
@@ -183,9 +180,9 @@
     <br />
 
     <style>
-      .C0 { stroke: #0000FF; fill: #0000FF; }
+      .C0 { stroke: #FF8800; fill: #FF8800; }
       .C1 { stroke: #0088FF; fill: #0088FF; }
-      .C2 { stroke: #008800; fill: #008800; }
+      .C2 { stroke: #88FF00; fill: #88FF00; }
       .C3 { stroke: #880088; fill: #880088; }
       
       line+line:last-child {
