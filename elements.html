@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html ng-app="html">
+
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/threejs/r76/three.min.js"></script>
+    <script>
+      function* Recurse(before,arr,rejector) {
+      	if(before.length < 1)
+      		before.push(arr.shift());
+      
+      	if(Reject(before,rejector))
+      		return;
+      
+      	if(before.length >= 10)
+      		yield before;
+      
+      	for(var item of arr) {
+      		if(before.length < 10)
+      			yield* Recurse(before.concat(item),arr.filter((e) => e != item),rejector);
+      	}
+      }
+      
+      var elements = [
+      	"Fire","Earth","Ice","Life","Water"
+      	,"Lightning","Metal","Poison","Wind","???"
+      ];
+      
+      var constraints = {
+      	Fire: { NoWin: ["Earth","Water","Wind","Metal"] },
+      	Earth: { NoWin: ["Life","Metal"] },
+      	Ice: { NoWin: ["Metal","Fire","Lightning","Earth"] },
+      	Life: { NoWin: ["Metal","Fire","Ice","Lightning"] },
+      	Water: { NoWin: ["Life","Lightning"] },
+      	Lightning: { NoWin: ["Earth","Fire"] },
+      	Metal: { NoWin: ["Water","Poison"] },
+      	Poison: { NoWin: ["Earth","Ice"] },
+      	Wind: { NoWin: ["Ice"] },
+      	"???": { NoWin: [] },
+      };
+      
+      var reverser = [
+        [1,1,1,1],
+        [1,1,1,-1],
+        [1,1,-1,1],
+        [1,1,-1,-1],
+        [1,-1,1,1],
+        [1,-1,1,-1],
+        [1,-1,-1,1],
+        [1,-1,-1,-1]
+      ];
+      
+      function Reject(arr,rejector) {
+      	for(var key in constraints)
+      	{
+      		var cons = constraints[key];
+      		var index = arr.indexOf(key);
+      		if(index < 0)
+      			continue;
+
+      		var reject = rejector.some((reverse,i) => {
+      		  if(!reverse)
+      		    return false;
+
+      		  i += 1;
+      		  var x = 10 - i;
+      		  var win;
+      		  if(reverse > 0)
+        		  win = index >= x ? index - x : index + i;
+        		else win = index < i ? x + index : index - i;
+        		if(arr.length >= win && cons.NoWin.indexOf(arr[win]) >= 0)
+        			return true;
+      		});
+      		
+      		if(reject)
+      		  return reject;
+      	}
+      }
+
+      angular.module('html',[]).controller('body',function($scope) {
+        $scope.net = [];
+        $scope.constraints = constraints;
+        
+        $scope.reConstraint = () => {
+          $scope.possible = 0;
+          for(var key in $scope.constraints)
+          {
+            var con = $scope.constraints[key];
+            con.Avail = elements.filter((ele) => {
+              return ele != key && !(con.NoWin.indexOf(ele) >= 0);
+            });
+          }
+
+          reverser.reduce((promise,r,x) => {
+            var e = elements.map((ele) => ele);
+            var i = 0;
+            
+            return promise.then(() => {
+              $scope.net[x] = { reverser : r , values : [] };
+              $scope.$apply();
+              return new Promise((resolve) => {
+                i = 0;
+                var iter = Recurse([],e,r);
+                setTimeout(() => resolve(iter),10);
+              });
+            }).then(function gen(iter) {
+              var res = iter.next();
+              if(res.done)
+                return;
+                
+              if(!$scope.selected)
+              {
+                $scope.selected = JSON.stringify([$scope.net[x].reverser,res.value]);
+                $scope.draw($scope.selected);
+              }
+  
+              $scope.net[x].values.push(res.value);
+              $scope.possible++;
+              $scope.$apply();
+              return Promise.resolve().then(() => gen(iter));
+            });
+          },Promise.resolve());
+        };
+
+        $scope.reConstraint();        
+        $scope.draw = (str) => {
+          str = angular.isString(str) ? JSON.parse(str) : str;
+
+          $scope.lines = str[0].map((reverse,i) => {
+            return str[1].map((e,p) => {
+              var f = ((i + 1) * p) % 10;
+              var t = ((i + 1) * (p - reverse)) % 10;
+              
+              var angle0 = Math.PI * 2 * f / 10;
+              var angle1 = Math.PI * 2 * t / 10;
+              if(i % 2 && p >= 5)
+              {
+                angle0 += Math.PI;
+                angle1 += Math.PI;
+                f = (f + 5) % 10;
+                t = (t + 5) % 10;
+              }
+
+              var p0 = new THREE.Vector2(Math.sin(angle0),Math.cos(angle0)).multiplyScalar(88);
+              var p1 = new THREE.Vector2(Math.sin(angle1),Math.cos(angle1)).multiplyScalar(88);
+              var sub = new THREE.Vector2().subVectors(p1,p0);
+              sub = sub.setLength(sub.length() - 16)
+              p1 = p1.sub(sub);
+              p0 = p0.add(sub);
+              return { p0 : p0,p0 : p0,p1 : p1,p1 : p1,f : f,t : t,c : i };
+            });
+          });
+          
+          $scope.elementTexts = str[1].map((e,i) => {
+            return {
+              x : 88 * Math.sin(Math.PI * 2 * i / 10),
+              y : 88 * Math.cos(Math.PI * 2 * i / 10),
+              text : e
+            };
+          });
+
+          console.log(str);
+        };
+
+        $scope.sactive = "";
+        $scope.SetC = (c) => $scope.sactive = "C" + c;
+        $scope.SetL = (l) => $scope.sactive = "L" + l;
+      });
+    </script>
+  </head>
+
+  <body ng-controller="body">
+    Possible Diagram {{possible}}
+    <br>
+    <select ng-model="selected" ng-change="draw(selected);">
+      <option ng-repeat-start="obj in net" ng-disabled="true">
+        {{obj.reverser}}
+      </option>
+      <option ng-repeat-end ng-repeat="value in obj.values" ng-value="[obj.reverser,value]|json">
+        {{value}}
+      </option>
+    </select>
+    <br />
+
+    <style>
+      .C0 { stroke: #0000FF; fill: #0000FF; }
+      .C1 { stroke: #0088FF; fill: #0088FF; }
+      .C2 { stroke: #008800; fill: #008800; }
+      .C3 { stroke: #880088; fill: #880088; }
+      
+      line+line:last-child {
+        opacity: 0.2;
+      }
+      
+      line.active:last-child {
+        opacity: 0.5;
+      }
+      
+      line:hover + line:last-child
+      ,line:hover:last-child
+      ,.active>line:hover + line:last-child {
+        opacity: 1;
+      }
+      
+    </style>
+
+    <svg width="400" height="400" viewBox="-100 -100 200 200">
+      <g>
+    	  <g ng-repeat="(n,line) in lines">
+          <marker id="triangle-C{{n}}" class="C{{n}}" viewBox="0 0 10 10" refX="0" refY="5" markerUnits="strokeWidth" markerWidth="6" markerHeight="5" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z"/>
+          </marker>
+          <g ng-repeat="l in line">
+            <line opacity="0" stroke-width="6"
+              ng-mouseover="SetC(n)" ng-mouseleave="SetC()"
+              class="C{{l.c}}"
+              ng-attr-x1="{{l.p0.x}}" ng-attr-y1="{{l.p0.y}}"
+              ng-attr-x2="{{l.p1.x}}" ng-attr-y2="{{l.p1.y}}" />
+            <line stroke-width="1" class="C{{l.c}}"
+              ng-mouseover="SetC(n)" ng-mouseleave="SetC()"
+              marker-end="url(#triangle-C{{n}})"
+              ng-class="{ active: (sactive == ('C' + l.c) || sactive == ('L' + l.f) || sactive == ('L' + l.t)) }"
+              ng-attr-x1="{{l.p0.x}}" ng-attr-y1="{{l.p0.y}}"
+              ng-attr-x2="{{l.p1.x}}" ng-attr-y2="{{l.p1.y}}" />
+          </g>
+        </g>
+      </g>
+    	<g stroke="black" stroke-width="0.3" font-size="50%" text-anchor="middle">
+    	  <g ng-repeat="(n,e) in elementTexts">
+        	<circle opacity="0" ng-attr-x="{{e.x}}" ng-attr-y="{{e.y}}" />
+        	<text class="ele" ng-attr-x="{{e.x}}" ng-attr-y="{{e.y}}">
+        	  <tspan ng-mouseover="SetL(n)" ng-mouseleave="SetL()" alignment-baseline="middle">{{e.text}}</tspan>
+        	</text>
+      	</g>
+    	</g>
+    </svg>
+    
+    <br/>
+    
+    <table>
+      <tr ng-repeat="(key,const) in constraints">
+        <td>{{key}}</td>
+        <td> no win </td>
+        <td ng-repeat="i in [0,1,2,3,4]">
+          <select ng-model="const.NoWin[i]" ng-change="reConstraint()">
+            <option>{{const.NoWin[i]}}</option>
+            <option ng-repeat="ele in const.Avail">{{ele}}</option>
+            <option ng-if="const.NoWin[i]"></option>
+          </select>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
