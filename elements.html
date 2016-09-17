@@ -12,28 +12,27 @@
       	if(Reject(before,rejector))
       		return;
       
-      	if(before.length >= 10)
+      	if(arr.length < 1)
       		yield before;
       
-      	for(var item of arr) {
-      		if(before.length < 10)
-      			yield* Recurse(before.concat(item),arr.filter((e) => e != item),rejector);
-      	}
+      	for(var item of arr)
+    			yield* Recurse(before.concat(item),arr.filter((e) => e != item),rejector);
       }
-      
+
       var constraints = {
       	Fire: { NoWin: ["Earth","Water","Wind","Metal"] },
       	Earth: { NoWin: ["Life","Metal"] },
       	Ice: { NoWin: ["Metal","Fire","Lightning","Earth"] },
       	Life: { NoWin: ["Metal","Fire","Ice","Lightning"] },
-      	Water: { NoWin: ["Life","Lightning"] },
-      	Lightning: { NoWin: ["Earth","Fire"] },
+      	Water: { NoWin: ["Life","Lightning","Wind"] },
+      	Lightning: { NoWin: ["Earth","Fire","Poison"] },
       	Metal: { NoWin: ["Water","Poison"] },
-      	Poison: { NoWin: ["Earth","Ice"] },
-      	Wind: { NoWin: ["Ice"] },
-      	"???": { NoWin: [] },
+      	Poison: { NoWin: ["Ice","Fire"] },
+      	Wind: { NoWin: ["Lightning","Ice"] },
+      	"????": { NoWin: [] }
       };
       
+      var elements = Object.keys(constraints);
       var reverser = [
         [1,1,1,1],
         [1,1,1,-1],
@@ -58,7 +57,7 @@
       		    return false;
 
       		  i += 1;
-      		  var x = 10 - i;
+      		  var x = elements.length - i;
       		  var win;
       		  if(reverse > 0)
         		  win = index >= x ? index - x : index + i;
@@ -72,8 +71,6 @@
       	}
       }
 
-
-      var elements = Object.keys(constraints);
       angular.module('html',[]).controller('body',function($scope) {
         $scope.net = [];
         $scope.constraints = constraints;
@@ -119,39 +116,68 @@
           },Promise.resolve());
         };
 
-        $scope.reConstraint();        
+        $scope.reConstraint();
+  
+        function gcd(a,b) {
+          return !b ? a : gcd(b,a % b);
+        }
+
         $scope.draw = (str) => {
-          str = angular.isString(str) ? JSON.parse(str) : str;
+          var [revs,sort] = angular.isString(str) ? JSON.parse(str) : str;
 
-          $scope.lines = str[0].map((reverse,i) => {
-            return str[1].map((e,p) => {
-              var f = ((i + 1) * p) % 10;
-              var t = ((i + 1) * (p - reverse)) % 10;
-              
-              var angle0 = Math.PI * 2 * f / 10;
-              var angle1 = Math.PI * 2 * t / 10;
-              if(i % 2 && p >= 5)
+          var half = elements.length / 2;
+          var angle = Math.PI * 2 / elements.length;
+
+          $scope.lines = revs.map((reverse,i) => {
+            var l = sort.length;
+            var com = gcd(l,i + 1);
+            var each = l / com;
+
+            var arrs = [];
+            while(arrs.length < com)
+            {
+              var arr = [];
+              while(arr.length < each)
               {
-                angle0 += Math.PI;
-                angle1 += Math.PI;
-                f = (f + 5) % 10;
-                t = (t + 5) % 10;
+                var index = (arrs.length - (reverse * arr.length * (i + 1))) % l;
+                if(index < 0)
+                  index = l + index;
+                
+                arr.push(index);
               }
+              
+              console.log(i,arrs.length,arr.join(","));
+              arrs.push(arr);
+            }
+            
+            return arrs.map((arr) => {
+              return arr.map((f,x) => {
+                var j = x + 1;
+                if(j >= arr.length)
+                  j = 0;
 
-              var p0 = new THREE.Vector2(Math.sin(angle0),Math.cos(angle0)).multiplyScalar(88);
-              var p1 = new THREE.Vector2(Math.sin(angle1),Math.cos(angle1)).multiplyScalar(88);
-              var sub = new THREE.Vector2().subVectors(p1,p0);
-              sub = sub.setLength(sub.length() - 16)
-              p1 = p1.sub(sub);
-              p0 = p0.add(sub);
-              return { p0 : p0,p0 : p0,p1 : p1,p1 : p1,f : f,t : t,c : i };
-            });
+                var t = arr[j];
+
+                var [p0,p1] = [f,t].map((v) => {
+                  var a = angle * v;
+                  return new THREE.Vector2(88 * Math.sin(a),88 * -Math.cos(a));
+                });
+
+                console.log([f,t],[p0.x,p0.y],[p1.x,p1.y]);
+                
+                var sub = new THREE.Vector2().subVectors(p1,p0);
+                sub = sub.setLength(sub.length() - 18)
+                p1 = p1.sub(sub);
+                p0 = p0.add(sub);
+                return { p0 : p0,p1 : p1,f : f,t : t,c : i };
+              });
+            }).reduce((a,arr) => a.concat(arr),[]);
           });
           
-          $scope.elementTexts = str[1].map((e,i) => {
+          $scope.elementTexts = sort.map((e,i) => {
             return {
-              x : 88 * Math.sin(Math.PI * 2 * i / 10),
-              y : 88 * Math.cos(Math.PI * 2 * i / 10),
+              x : 88 * Math.sin(angle * i),
+              y : 88 * -Math.cos(angle * i),
               text : e
             };
           });
