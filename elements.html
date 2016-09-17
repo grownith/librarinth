@@ -20,16 +20,16 @@
       }
 
       var constraints = {
-      	Fire: { NoWin: ["Earth","Water","Wind","Metal"] },
-      	Earth: { NoWin: ["Life","Metal"] },
-      	Ice: { NoWin: ["Metal","Fire","Lightning","Earth"] },
+      	Fire: { NoWin: ["Earth","Water","Wind","Metal","Ice"] },
+      	Earth: { NoWin: ["Life","Metal","Poison"] },
+      	Ice: { NoWin: ["Metal","Fire","Lightning"] },
       	Life: { NoWin: ["Metal","Fire","Ice","Lightning"] },
-      	Water: { NoWin: ["Life","Lightning","Wind"] },
+      	Water: { NoWin: ["Life","Lightning","Earth","Wind"] },
       	Lightning: { NoWin: ["Earth","Fire","Poison"] },
-      	Metal: { NoWin: ["Water","Poison"] },
+      	Metal: { NoWin: ["Water","Poison","Lightning"] },
       	Poison: { NoWin: ["Ice","Fire"] },
-      	Wind: { NoWin: ["Lightning","Ice"] },
-      	"????": { NoWin: [] }
+      	Wind: { NoWin: ["Lightning","Water"] },
+      	Soul: { NoWin: [] }
       };
       
       var elements = Object.keys(constraints);
